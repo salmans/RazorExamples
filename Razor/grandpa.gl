@@ -1,0 +1,41 @@
+Man(p) => Person(p)
+Woman(p) => Person(p)
+
+Man(p) & Woman(p) => Falsehood
+
+mother(p) = w => Person(p) & Woman(w)
+father(p) = m => Person(p) & Man(m)
+
+wife(m) = w => Man(m) & Woman(w)
+husband(w) = m => Man(m) & Woman(w)
+
+mother(p) = m => Ancestor(p, m)
+father(p) = f => Ancestor(p, f)
+
+-- Biology:
+Ancestor(p, a) & father(a) = f => Ancestor(p, f)
+Ancestor(p, a) & mother(a) = m => Ancestor(p, m)
+
+Ancestor(p, p) => Falsehood
+
+
+-- Terminology:
+wife(m) = w => husband(w) = m
+husband(w) = m => wife(m) = w
+
+-- Social Convention:
+wife(p) = w & Ancestor(p, w) => Falsehood
+husband(p) = h & Ancestor(p, h) => Falsehood
+
+father(p) = f => Parent(p, f)
+mother(p) = m => Parent(p, m)
+father(p) = f & wife(f) = w => Parent(p, w)
+mother(p) = m & husband(m) = h => Parent(p, h)
+
+Grandpas(p, g) => exists p_ . Parent(p_, g) & Parent(p, p_) & Man(g)
+Parent(p, p_) & Parent(p_, g) & Man(g) => Grandpas(p, g)
+
+Parent(p, p_) => father(p) = p_ | mother(p) = p_ | (exists f . father(p) = f & wife(f) = p_) | (exists m . mother(p) = m & husband(m) = p_)
+
+-- Own Grandpa
+exists p. Grandpas(p, p)
